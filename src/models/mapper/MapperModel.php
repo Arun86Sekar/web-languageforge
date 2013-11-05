@@ -66,9 +66,6 @@ class MapperModel
 	public function write() {
 		CodeGuard::checkTypeAndThrow($this->id, 'models\mapper\Id');
 		$this->dateModified = new \DateTime();
-		if (Id::isEmpty($this->id)) {
-			$this->dateCreated = new \DateTime();
-		}
 		$this->id->id = $this->_mapper->write($this, $this->id->id);
 		return $this->id->id;
 	}
