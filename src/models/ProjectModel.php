@@ -117,12 +117,15 @@ class ProjectModel extends \models\mapper\MapperModel
 		$userList->read();
 		for ($i = 0, $l = count($userList->entries); $i < $l; $i++) {
 			$userId = $userList->entries[$i]['id'];
+			$user = new UserModel($userId);
 			if (!key_exists($userId, $this->users->data)) {
 				$projectId = $this->id->asString();
 				error_log("User $userId is not a member of project $projectId");
 				continue;
 			}
 			$userList->entries[$i]['role'] = $this->users->data[$userId]->role;
+			$userList->entries[$i]['avatar_ref'] = $user->avatar_ref;
+			$userList->entries[$i]['username'] = $user->username;
 		}
  		return $userList;
 	}

@@ -75,8 +75,10 @@ angular.module(
 					
 					$scope.messages = result.data.broadcastMessages;
 					
-					// update activity count service
+					// TODO update activity count service
 					$scope.activityUnreadCount = result.data.activityUnreadCount;
+					
+					$scope.activity = result.data.activity;
 					
 					$scope.members = result.data.members;
 						

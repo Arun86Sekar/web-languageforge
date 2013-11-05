@@ -2,6 +2,8 @@
 
 namespace models\dto;
 
+use models\MessageListModel;
+
 use models\MessageModel;
 
 use models\UnreadMessageModel;
@@ -53,27 +55,21 @@ class ProjectPageDto
 			$data['texts'][] = $entry;
 		}
 		
-		// future support for members
-		$data['members'] = array();
+		// project member list
+		$members = $projectModel->listUsers();
+		$data['members'] = $members->entries;
 		
-		// unread activity count
-		$unreadActivity = new UnreadActivityModel($userId);
-		$unreadItems = $unreadActivity->unreadItems();
-		$data['activityUnreadCount'] = count($unreadItems);
+		// project activity feed
+		$data['activity'] = ActivityListDto::getActivityForProjectWithUnreadForUser($projectModel, $userId);
 		
-		// unread broadcast messages
+		// broadcast messages
 		$unreadMessages = new UnreadMessageModel($userId, $projectId);
-		$messageIds = $unreadMessages->unreadItems();
-		$messages = array();
-		foreach ($messageIds as $messageId) {
-			$message = new MessageModel($projectModel, $messageId);
-			$messages[] = array(
-				'id' => $message->id->asString(),
-				'subject' => $message->subject,
-				'content' => $message->content
-			);
-		}
-		$data['broadcastMessages'] =  $messages;
+		$unreadMessageIds = $unreadMessages->unreadItems();
+		$messages = MessageListModel($projectModel);
+		$data['messages'] =  array(
+			'messages' => $messages,
+			'unread' => $unreadMessageIds
+		);
 		
 		return $data;
 	}

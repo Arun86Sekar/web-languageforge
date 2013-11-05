@@ -51,4 +51,19 @@ class MessageModel extends \models\mapper\MapperModel
 	
 }
 
+
+class MessageListModel extends \models\mapper\MapperListModel
+{
+
+	public function __construct($projectModel)
+	{
+		parent::__construct(
+			MessageModelMongoMapper::connect($projectModel->databaseName()),
+			array('content' => array('$regex' => '')),
+			array('subject', 'content')
+		);
+	}
+	
+}
+
 ?>

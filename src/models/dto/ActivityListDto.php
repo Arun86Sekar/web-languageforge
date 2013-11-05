@@ -110,6 +110,19 @@ class ActivityListDto
 		return $dto;
 	}
 	
+	public static function getActivityForProjectWithUnreadForUser($projectModel, $userId) {
+		$activity = self::getActivityForProject($projectModel);
+		$unreadActivity = new UnreadActivityModel($userId);
+		$unreadItems = $unreadActivity->unreadItems();
+		$unreadActivity->markAllRead();
+		$unreadActivity->write();
+		$dto = array(
+				'activity' => $activity,
+				'unread' => $unreadItems
+		);
+		return $dto;
+	}
+	
 	private static function sortActivity($a, $b) {
 		return (new \DateTime($a['date']) < new \DateTime($b['date'])) ? 1 : -1;
 	}

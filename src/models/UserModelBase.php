@@ -121,6 +121,7 @@ class UserModelBase extends \models\mapper\MapperModel
 	 */
 	public $id;
 	
+	// TODO Some of these properties should not be included in the base for security reasons: name, email and emailPending for starts
 	/**
 	 * @var string
 	 */
