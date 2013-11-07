@@ -3,26 +3,7 @@
 namespace models;
 
 use models\mapper\Id;
-
-class MessageModelMongoMapper extends \models\mapper\MongoMapper
-{
-	/**
-	 * @var TextModelMongoMapper[]
-	 */
-	private static $_pool = array();
-	
-	/**
-	 * @param string $databaseName
-	 * @return TextModelMongoMapper
-	 */
-	public static function connect($databaseName) {
-		if (!isset(static::$_pool[$databaseName])) {
-			static::$_pool[$databaseName] = new MessageModelMongoMapper($databaseName, 'messages');
-		}
-		return static::$_pool[$databaseName];
-	}
-	
-}
+use models\mapper\MessageModelMongoMapper;
 
 class MessageModel extends \models\mapper\MapperModel
 {
@@ -48,21 +29,6 @@ class MessageModel extends \models\mapper\MapperModel
 	public $subject;
 	
 	public $content;
-	
-}
-
-
-class MessageListModel extends \models\mapper\MapperListModel
-{
-
-	public function __construct($projectModel)
-	{
-		parent::__construct(
-			MessageModelMongoMapper::connect($projectModel->databaseName()),
-			array('content' => array('$regex' => '')),
-			array('subject', 'content')
-		);
-	}
 	
 }
 
