@@ -29,14 +29,17 @@ class ProjectPageDto
 	public static function encode($projectId, $userId) {
 		$userModel = new UserModel($userId);
 		$projectModel = new ProjectModel($projectId);
-		$textList = new TextListModel($projectModel);
-		$textList->read();
 
 		$data = array();
 		$data['rights'] = RightsHelper::encode($userModel, $projectModel);
 		$data['project'] = array(
 				'name' => $projectModel->projectname,
 				'id' => $projectId);
+		
+		
+		// text list
+		$textList = new TextListModel($projectModel);
+		$textList->read();
 		$data['texts'] = array();
 		foreach ($textList->entries as $entry) {
 			$textModel = new TextModel($projectModel, $entry['id']);
@@ -65,9 +68,10 @@ class ProjectPageDto
 		// broadcast messages
 		$unreadMessages = new UnreadMessageModel($userId, $projectId);
 		$unreadMessageIds = $unreadMessages->unreadItems();
-		$messages = MessageListModel($projectModel);
+		$messageList = new MessageListModel($projectModel);
+		$messageList->read();
 		$data['messages'] =  array(
-			'messages' => $messages,
+			'items' => $messageList->entries,
 			'unread' => $unreadMessageIds
 		);
 		

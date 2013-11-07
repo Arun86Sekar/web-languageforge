@@ -30,8 +30,8 @@ class ProjectCommands
 	/**
 	 * Update the user role in the project
 	 * @param string $projectId
-	 * @param array $params
-	 * @return unknown|string
+	 * @param array $params   e.g. ['id' => '12345', 'role' => Roles::USER]
+	 * @return string
 	 */
 	public static function updateUserRole($projectId, $params) {
 		CodeGuard::checkNotFalseAndThrow($projectId, '$projectId');

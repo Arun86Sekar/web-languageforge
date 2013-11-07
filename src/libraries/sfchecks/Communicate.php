@@ -110,7 +110,7 @@ class Communicate
 {
 	/**
 	 * 
-	 * @param array $users array<UserModel> 
+	 * @param array $users array<UserModel> - array of UserModel
 	 * @param ProjectSettingsModel $project
 	 * @param string $subject
 	 * @param string $smsTemplate

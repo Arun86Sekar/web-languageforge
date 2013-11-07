@@ -117,7 +117,7 @@ class ActivityListDto
 		$unreadActivity->markAllRead();
 		$unreadActivity->write();
 		$dto = array(
-				'activity' => $activity,
+				'items' => $activity,
 				'unread' => $unreadItems
 		);
 		return $dto;
