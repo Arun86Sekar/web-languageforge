@@ -45,6 +45,10 @@ angular.module(
 			}
 		};
 		
+		$scope.toggleMessageRead = function(id) {
+			console.log('toggle ' + id + ' read');
+		}
+		
 		
 		
 		// Listview Selection
@@ -76,11 +80,16 @@ angular.module(
 					$scope.messages = result.data.broadcastMessages;
 					
 					// TODO update activity count service
-					$scope.activityUnreadCount = result.data.activityUnreadCount;
+					$scope.activityUnreadCount = result.data.activity.unreadCount;
 					
-					$scope.activity = result.data.activity;
+					$scope.activity = result.data.activity.items;
+					
 					
 					$scope.members = result.data.members;
+					
+					$scope.messages = result.data.messages.items;
+					
+					$scope.messageUnreadCount = result.data.messages.unreadCount;
 						
 
 					$scope.project = result.data.project;

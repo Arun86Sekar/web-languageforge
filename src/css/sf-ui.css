@@ -1,3 +1,5 @@
+/* Structural CSS */
+
 table.tableform input,
 table.tableform textarea {
 	margin-bottom: 0px;
@@ -5,4 +7,33 @@ table.tableform textarea {
 
 table.tableform td {
 	padding-bottom: 8px;
+}
+
+div.messageItem {
+	margin:5px 0 5px 0;
+	padding: 5px;
+	background: rgb(252, 248, 227);
+	border: solid 1px rgb(229, 211, 119);
+	color: rgb(168, 148, 48); 
+}
+
+div.messageItem .messageSubject {
+	background: rgb(252, 248, 227);
+	font-weight:bold;
+	cursor: pointer;
+}
+
+div.messageItem .messageContent {
+	border-top: solid 2px rgb(229, 211, 119);
+	
+}
+
+div#messageList {
+	height:300px;
+	overflow: auto;
+}
+
+div#activityList {
+	height:300px;
+	overflow: auto;
 }

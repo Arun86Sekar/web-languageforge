@@ -1,5 +1,33 @@
 <h2 style="font-weight:normal">{{project.name}} Dashboard</h2>
-<div class="notices"><alert ng-repeat="message in messages" type="info" close="markMessageRead(message.id)"><b>{{message.subject}}</b><br /><span ng-bind-html="message.content"></span></alert></div>
+
+<div class="container">
+	<div class="span4" id="activityList">
+		activitylist
+	</div>
+	<div class="span3"> 
+		<h3 style="text-align:center">Messages</h3>
+		<div id="messageList">
+			<div class="messageItem" ng-repeat="message in messages">
+				<div class="messageSubject" ng-click="toggleMessageRead(message.id)">{{message.subject}}</div>
+				<div class="messageContent" ng-bind-html="message.content"></div>
+			</div>
+		</div>
+	</div>
+	<div class="span2 well" id="workflowlist">
+		workflowlist
+	</div>
+	<div class="span2" id="avatarlist">
+		<h3 style="text-align:center">Members</h3>
+		<img style="display:inline; margin:2px" ng-repeat="member in members" ng-src="{{member.avatar_ref}}" width="40px" height="40px" title="{{member.username}}"/>
+	</div>
+	
+</div>
+
+
+
+
+
+
 <form ng-show="rights.showControlBar" class="control-bar form-inline">
 	<button ng-disabled="selected.length == 0" ng-show="rights.deleteOther" class="btn" ng-click="removeTexts()"><i class="icon-remove"></i>Remove Texts</button>
 	<button ng-show="rights.create" class="btn" ng-click="newTextCollapsed = !newTextCollapsed"><i class="icon-plus"></i>Add New Text</button>

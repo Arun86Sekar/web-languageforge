@@ -98,13 +98,11 @@ class TestProjectPageDto extends UnitTestCase {
 		// message list check
 		$this->assertIsA($dto['messages']['items'], 'array');
 		$this->assertEqual($dto['messages']['items'][0]['subject'], 'subject!');
-		$this->assertIsA($dto['messages']['unread'], 'array');
-		$this->assertEqual(count($dto['messages']['unread']), 1);
+		$this->assertEqual($dto['messages']['unreadCount'], 1);
 		
 		// activity feed check
 		$this->assertIsa($dto['activity']['items'], 'array');
-		$this->assertIsa($dto['activity']['unread'], 'array');
-		$this->assertEqual(count($dto['activity']['items']), 2);
+		$this->assertEqual($dto['activity']['unreadCount'], 2);
 
 	}
 

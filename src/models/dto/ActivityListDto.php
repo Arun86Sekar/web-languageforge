@@ -116,11 +116,10 @@ class ActivityListDto
 		$unreadItems = $unreadActivity->unreadItems();
 		$unreadActivity->markAllRead();
 		$unreadActivity->write();
-		$dto = array(
-				'items' => $activity,
-				'unread' => $unreadItems
+		return array(
+				'items' => self::decorateWithUnread($activity, $unreadItems),
+				'unreadCount' => count($unreadItems)
 		);
-		return $dto;
 	}
 	
 	private static function sortActivity($a, $b) {
@@ -133,6 +132,21 @@ class ActivityListDto
 			$item['type'] = 'project';
 			unset($item['actionContent']);
 		}
+	}
+	
+	/**
+	 * @param array $dto
+	 * @param array $unread
+	 * @return array
+	 */
+	private static function decorateWithUnread($dto, $unread) {
+		foreach ($dto as &$item) {
+			$item['unread'] = false;
+			if (in_array($item['id'], $unread)) {
+				$item['unread'] = true;
+			}
+		}
+		return $dto;
 	}
 }
 

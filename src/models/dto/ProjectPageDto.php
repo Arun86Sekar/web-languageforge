@@ -60,7 +60,7 @@ class ProjectPageDto
 		
 		// project member list
 		$members = $projectModel->listUsers();
-		$data['members'] = $members->entries;
+		$data['members'] = self::sanitizeMembers($members->entries);
 		
 		// project activity feed
 		$data['activity'] = ActivityListDto::getActivityForProjectWithUnreadForUser($projectModel, $userId);
@@ -70,12 +70,41 @@ class ProjectPageDto
 		$unreadMessageIds = $unreadMessages->unreadItems();
 		$messageList = new MessageListModel($projectModel);
 		$messageList->read();
+		$data['messages'] = 
 		$data['messages'] =  array(
-			'items' => $messageList->entries,
-			'unread' => $unreadMessageIds
+			'items' => self::decorateWithUnread($messageList->entries, $unreadMessageIds),
+			'unreadCount' => count($unreadMessageIds)
 		);
 		
 		return $data;
+	}
+	
+	/**
+	 * @param array $dto
+	 * @return array
+	 */
+	private static function sanitizeMembers($dto) {
+		foreach ($dto as &$user) {
+			unset($user['name']);
+			unset($user['email']);
+			unset($user['role']);
+		}
+		return $dto;
+	}
+	
+	/**
+	 * @param array $dto
+	 * @param array $unread
+	 * @return array
+	 */
+	private static function decorateWithUnread($dto, $unread) {
+		foreach ($dto as &$item) {
+			$item['unread'] = false;
+			if (in_array($item['id'], $unread)) {
+				$item['unread'] = true;
+			}
+		}
+		return $dto;
 	}
 }
 
