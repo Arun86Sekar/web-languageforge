@@ -13,26 +13,6 @@ require_once(SimpleTestPath . 'autorun.php');
 
 require_once(TestPath . 'common/MongoTestEnvironment.php');
 
-class MockUserCommandsDelivery implements IDelivery {
-	public $from;
-	public $to;
-	public $subject;
-	public $content;
-	public $smsModel;
-
-	public function sendEmail($from, $to, $subject, $content) {
-		$this->from = $from;
-		$this->to = $to;
-		$this->subject = $subject;
-		$this->content = $content;
-	}
-	
-	public function sendSms($smsModel) {
-		$this->smsModel = $smsModel;
-	}
-	
-}
-
 class TestUserCommands extends UnitTestCase {
 
 	function testDeleteUsers_NoThrow() {
@@ -88,7 +68,7 @@ class TestUserCommands extends UnitTestCase {
 		);
 		$captcha_info = array('code' => $validCode);
 		$projectCode = $project->projectCode;
-		$delivery = new MockUserCommandsDelivery();
+		$delivery = new MockCommunicateDelivery();
 		
 		$userId = UserCommands::register($params, $captcha_info, $projectCode, $delivery);
 		
@@ -112,7 +92,7 @@ class TestUserCommands extends UnitTestCase {
 				'captcha' => $validCode
 		);
 		$captcha_info = array('code' => $validCode);
-		$delivery = new MockUserCommandsDelivery();
+		$delivery = new MockCommunicateDelivery();
 		
 		$userId = UserCommands::register($params, $captcha_info, '', $delivery);
 		
@@ -147,6 +127,7 @@ class TestUserCommands extends UnitTestCase {
 		$this->expectException();
 		$e->inhibitErrorDisplay();
 		$params = UserCommands::readForRegistration($key);
+		$e->restoreErrorDisplay();
 	}
 	
 	function testReadForRegistration_invalidKey_noValidUser() {
@@ -222,9 +203,10 @@ class TestUserCommands extends UnitTestCase {
 			'name'     => 'joe user',
 			'password' => 'password'
 		);
-		$e->inhibitErrorDisplay();
 		$this->expectException();
+		$e->inhibitErrorDisplay();
 		UserCommands::updateFromRegistration($key, $userArray);
+		$e->restoreErrorDisplay();
 		
 		$user = new UserModel($userId);
 		
@@ -242,7 +224,7 @@ class TestUserCommands extends UnitTestCase {
 		$project = $e->createProject(SF_TESTPROJECT);
 		$project->projectCode = 'someProjectCode';
 		$project->write();
-		$delivery = new MockUserCommandsDelivery();
+		$delivery = new MockCommunicateDelivery();
 	
 		$toUserId = UserCommands::sendInvite($inviterUser, $toEmail, $project->id->asString(), $project->projectCode, $delivery);
 	
@@ -266,7 +248,7 @@ class TestUserCommands extends UnitTestCase {
 		$toEmail = 'someone@example.com';
 		$projectId = '';
 		$hostName = 'someProjectCode.scriptureforge.org';
-		$delivery = new MockUserCommandsDelivery();
+		$delivery = new MockCommunicateDelivery();
 	
 		$e->inhibitErrorDisplay();
 		$this->expectException(new \Exception("Cannot send invitation for unknown project 'someProjectCode'"));
@@ -283,7 +265,7 @@ class TestUserCommands extends UnitTestCase {
 		$toEmail = 'someone@example.com';
 		$projectId = '';
 		$hostName = 'scriptureforge.org';
-		$delivery = new MockUserCommandsDelivery();
+		$delivery = new MockCommunicateDelivery();
 	
 		$e->inhibitErrorDisplay();
 		$this->expectException(new \Exception("Sending an invitation without a project context is not supported."));
