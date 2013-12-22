@@ -37,6 +37,7 @@ class MaintenanceDto
 		// list users
 		$canListUsers = $user->hasRight(Domain::USERS + Operation::VIEW_OTHER);
 		$dto['userList'] = array();
+		$dto['danglingUserList'] = array();
 		
 		if ($canListUsers) {
 			$userList = new UserListModel();
@@ -44,12 +45,43 @@ class MaintenanceDto
 			
 			$dto['userList']['count'] = $userList->count;
 			$dto['userList']['entries'] = $userList->entries;
+			
+			$dto['danglingUserList'] = self::danglingUserList($userList, $projectList);
 		} else {
 			$dto['userList']['count'] = 0;
 			$dto['userList']['entries'] = array();
+			
+			$dto['danglingUserList']['count'] = 0;
+			$dto['danglingUserList']['entries'] = array();
 		}
 		
 		return $dto;
+	}
+	
+	/**
+	 * List any user who is not in a project but the project has the user
+	 * @param UserListModel $userList
+	 * @param ProjectList_UserModel $projectList
+	 * @return array userList
+	 */
+	private static function danglingUserList($userList, $projectList) {
+		$result = array();
+		$result['count'] = 0;
+		$result['entries'] = array();
+		echo "<h3>Dangling UserList</h3>";
+		foreach ($userList->entries as $userEntry) {
+			$user = new UserModel($userEntry['id']);
+			echo "<p>User: " . $user->name . " has Projects: </p>";
+			echo "<pre>";
+			var_dump($user->projects);
+			echo "</pre>";
+			foreach ($user->projects as $projectRef) {
+				$project = new ProjectModel($projectRef->asString());
+				echo "<p>Project: " . $project->projectname . "</p>";
+			}
+		}
+		
+		return $result;
 	}
 	
 }

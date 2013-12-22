@@ -19,8 +19,7 @@ class TestMaintenanceDto extends UnitTestCase {
 		$user->role = Roles::USER;
 		$user->write();
 			
-		$project1Name = SF_TESTPROJECT;
-		$project1 = $e->createProject($project1Name);
+		$project1 = $e->createProject(SF_TESTPROJECT);
 		$projectId1 = $project1->id->asString();
 		$project1->addUser($userId, Roles::USER);
 		$project1->write();
@@ -34,7 +33,7 @@ class TestMaintenanceDto extends UnitTestCase {
 		$this->assertEqual($dto['projectList']['count'], 1);
 		$this->assertIsA($dto['projectList']['entries'], 'array');
 		$this->assertEqual($dto['projectList']['entries'][0]['id'], $projectId1);
-		$this->assertEqual($dto['projectList']['entries'][0]['projectname'], $project1Name);
+		$this->assertEqual($dto['projectList']['entries'][0]['projectname'], SF_TESTPROJECT);
 		$this->assertEqual($dto['userList']['count'], 0);
 	}
 
@@ -52,14 +51,12 @@ class TestMaintenanceDto extends UnitTestCase {
 		$user->role = Roles::USER;
 		$user->write();
 		
-		$project1Name = SF_TESTPROJECT;
-		$project1 = $e->createProject($project1Name);
+		$project1 = $e->createProject(SF_TESTPROJECT);
 		$projectId1 = $project1->id->asString();
 		$project1->addUser($adminId, Roles::USER);
 		$project1->write();
 		
-		$project2Name = SF_TESTPROJECT2;
-		$project2 = $e->createProject($project2Name);
+		$project2 = $e->createProject(SF_TESTPROJECT2);
 		$projectId2 = $project2->id->asString();
 		
 		$dto = MaintenanceDto::encode($adminId);
@@ -71,15 +68,56 @@ class TestMaintenanceDto extends UnitTestCase {
 		$this->assertEqual($dto['projectList']['count'], 2);
 		$this->assertIsA($dto['projectList']['entries'], 'array');
 		$this->assertEqual($dto['projectList']['entries'][0]['id'], $projectId1);
-		$this->assertEqual($dto['projectList']['entries'][0]['projectname'], $project1Name);
+		$this->assertEqual($dto['projectList']['entries'][0]['projectname'], SF_TESTPROJECT);
 		$this->assertEqual($dto['projectList']['entries'][1]['id'], $projectId2);
-		$this->assertEqual($dto['projectList']['entries'][1]['projectname'], $project2Name);
+		$this->assertEqual($dto['projectList']['entries'][1]['projectname'], SF_TESTPROJECT2);
 		$this->assertEqual($dto['userList']['count'], 2);
 		$this->assertIsA($dto['userList']['entries'], 'array');
 		$this->assertEqual($dto['userList']['entries'][0]['id'], $adminId);
 		$this->assertEqual($dto['userList']['entries'][0]['username'], "admin");
 		$this->assertEqual($dto['userList']['entries'][1]['id'], $userId);
 		$this->assertEqual($dto['userList']['entries'][1]['username'], "user");
+	}
+	
+	function testEncode_UserInProjectButProjectRemoved_DtoReturnsDanglingUserCount1() {
+		$e = new MongoTestEnvironment();
+		$e->clean();
+		
+		$adminId = $e->createUser("admin", "Admin Name", "admin@example.com");
+		$admin = new UserModel($adminId);
+		$admin->role = Roles::SYSTEM_ADMIN;
+		$admin->write();
+		
+		$userId = $e->createUser("user", "Name", "name@example.com");
+		$user = new UserModel($userId);
+		$user->role = Roles::USER;
+		
+		$project1 = $e->createProject(SF_TESTPROJECT);
+		$projectId1 = $project1->id->asString();
+		$user->addProject($projectId1);
+		$user->write();
+		$project1->remove();
+		
+		$project2 = $e->createProject(SF_TESTPROJECT2);
+		$projectId2 = $project2->id->asString();
+		
+		$dto = MaintenanceDto::encode($adminId);
+		echo "<pre>";
+		var_dump($dto['danglingUserList']);
+		echo "</pre>";
+		
+		$this->assertEqual($dto['danglingUserList']['count'], 1);
+		$this->assertIsA($dto['danglingUserList']['entries'], 'array');
+		$this->assertEqual($dto['danglingUserList']['entries'][0]['id'], $userId);
+		$this->assertEqual($dto['danglingUserList']['entries'][0]['projects'][0], "$projectId1");
+	}
+
+	function testEncode_ProjectHasUserOnly_DtoReturnsUnlinkedUserCount1() {
+		
+	}
+	
+	function testEncode_UserInProjectOnly_DtoReturnsUnlinkedProjectCount1() {
+		
 	}
 	
 }
