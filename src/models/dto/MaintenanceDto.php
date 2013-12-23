@@ -59,7 +59,7 @@ class MaintenanceDto
 	}
 	
 	/**
-	 * List any user who is not in a project but the project has the user
+	 * List any user who has project refs that are no longer projects
 	 * @param UserListModel $userList
 	 * @param ProjectList_UserModel $projectList
 	 * @return array userList
