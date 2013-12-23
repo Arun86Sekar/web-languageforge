@@ -71,17 +71,49 @@ class MaintenanceDto
 		echo "<h3>Dangling UserList</h3>";
 		foreach ($userList->entries as $userEntry) {
 			$user = new UserModel($userEntry['id']);
-			echo "<p>User: " . $user->name . " has Projects: </p>";
-			echo "<pre>";
-			var_dump($user->projects);
-			echo "</pre>";
-			foreach ($user->projects as $projectRef) {
-				$project = new ProjectModel($projectRef->asString());
-				echo "<p>Project: " . $project->projectname . "</p>";
+			if ($user->projects && $user->projects->refs) {
+				echo "<p>User: " . $user->name . " has Projects:</p>";
+				echo "<ul>";
+// 				echo "<pre>";
+// 				var_dump($projectList);
+// 				echo "</pre>";
+				$invalidProjects = array();
+				foreach ($user->projects->refs as $projectRef) {
+					echo "<li>ProjectRef: " . $projectRef;
+					if (! self::projectRefInList($projectRef, $projectList)) {
+						$invalidProjects[] = $projectRef->asString();
+						echo " is not a project";
+					}
+					echo "</li>";
+				}
+				echo "</ul>";
+				if (count($invalidProjects) > 0) {
+					$result['entries'][] = array(
+							'id' => $userEntry['id'],
+							'projects' => $invalidProjects
+						);
+					$result['count']++;
+				}
 			}
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Returns true if the projectRef is in the projectList  
+	 * @param Id $projectRef
+	 * @param ProjectList_UserModel $projectList
+	 * @return boolean
+	 */
+	private static function projectRefInList($projectRef, $projectList) {
+		foreach($projectList->entries as $projectListRef) {
+			if ($projectRef->asString() == $projectListRef['id']) {
+		        return true;
+		    }
+		}			
+
+		return false;
 	}
 	
 }
