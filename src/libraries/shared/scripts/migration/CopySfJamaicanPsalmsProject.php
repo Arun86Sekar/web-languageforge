@@ -30,12 +30,12 @@ class CopySfJamaicanPsalmsProject
             return $message;
         }
 
-        $projectCopy = $project;
+        $projectCopy = clone $project;
         $projectCopy->id = new Id();
         $projectCopy->projectCode = $projectCodeCopy;
         $projectCopy->projectName .= ' (copy)';
         if (!$testMode) {
-            $message .= "  Saving changes to project $projectCopy->projectName.\n\n";
+            $message .= "  Saving copied project '$projectCopy->projectName'.\n\n";
             $projectCopy->write();
         }
 
@@ -61,12 +61,19 @@ class CopySfJamaicanPsalmsProject
                 $question = new QuestionModel($project, $questionId);
                 $questionCopy = new QuestionModel($projectCopy);
                 foreach ($question as $field => $value) {
-                    if ($field != 'id' || $field != 'answers') {
+                    if ($field != 'id' && $field != 'answers') {
                         $questionCopy->{$field} = $question->{$field};
                     }
                 }
 
                 // copy Answers
+                foreach ($question->answers as $answerId => $answer) {
+
+                    // Copy Comments
+                    foreach ($answer->comments as $commentId => $comment) {
+
+                    }
+                }
 
                 if (!$testMode) {
                     $questionCopy->write();
@@ -79,8 +86,6 @@ class CopySfJamaicanPsalmsProject
             }
             $message .= "Copied text: $text->title\n";
         }
-
-        // Copy Comments
 
         // Copy Assets
 
