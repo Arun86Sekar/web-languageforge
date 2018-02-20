@@ -1,6 +1,7 @@
 import * as angular from 'angular';
 
 import { UserService } from '../../core/api/user.service';
+import { ApplicationHeaderService } from '../../core/application-header.service';
 import { ModalService } from '../../core/modal/modal.service';
 import { NoticeService } from '../../core/notice/notice.service';
 import { UtilityService } from '../../core/utility.service';
@@ -30,9 +31,10 @@ export class UserProfileAppController implements angular.IController {
   private initShape = '';
 
   static $inject = ['$scope', '$window',
-    'userService', 'modalService', 'silNoticeService'];
+    'userService', 'modalService', 'silNoticeService', 'applicationHeaderService'];
   constructor(private $scope: UserProfileAppControllerScope, private $window: angular.IWindowService,
-              private userService: UserService, private modalService: ModalService, private notice: NoticeService) {}
+              private userService: UserService, private modalService: ModalService, private notice: NoticeService,
+              private applicationHeaderService: ApplicationHeaderService) {}
 
   $onInit(): void {
     this.user.avatar_ref = UserProfileAppController.getAvatarRef('', '');
@@ -157,6 +159,7 @@ export class UserProfileAppController implements angular.IController {
         this.initColor = this.user.avatar_color;
         this.initShape = this.user.avatar_shape;
         this.projectsSettings = result.data.projectsSettings;
+        this.applicationHeaderService.setPageName(this.user.name + '\'s User Profile');
 
         // populate the project pickList default values with the userProfile picked values
         for (const project of this.projectsSettings) {

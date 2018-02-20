@@ -25,6 +25,7 @@ export class BreadcrumbService {
   set(id: string, crumbs: Crumb[]): void {
     this.ensureIdIsRegistered(id);
     this.crumbStore[id] = crumbs;
+    console.log(id);
   }
 
   get(id: string): Crumb[] {

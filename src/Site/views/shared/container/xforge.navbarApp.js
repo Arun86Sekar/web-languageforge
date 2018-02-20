@@ -1,14 +1,15 @@
 'use strict';
 
-angular.module('xforge.navbarApp', ['ui.bootstrap', 'coreModule'])
+angular.module('xforge.navbarApp', ['ui.bootstrap', 'coreModule', 'sgw.ui.breadcrumb'])
   .controller('navbarController', ['$scope', 'modalService', '$location', 'sessionService',
-    '$window', 'projectService',
+    '$window', 'projectService', 'applicationHeaderService',
     function ($scope, modalService, $location, sessionService,
-            $window, projectService) {
+            $window, projectService, applicationHeaderService) {
     $scope.helpFilePath = '';
     $scope.projectTypeNames = projectService.data.projectTypeNames;
     $scope.projectTypesBySite = projectService.data.projectTypesBySite;
     $scope.rights = {};
+    $scope.header = applicationHeaderService.data;
 
     // this function should be run whenever the location changes
     function isHelpFilePresentOnServer() {
@@ -48,4 +49,4 @@ angular.module('xforge.navbarApp', ['ui.bootstrap', 'coreModule'])
 
   }])
 
-  ;
+;

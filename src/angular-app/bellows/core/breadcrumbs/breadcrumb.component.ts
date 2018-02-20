@@ -1,5 +1,6 @@
 import * as angular from 'angular';
 
+import { ApplicationHeaderService } from '../application-header.service';
 import { BreadcrumbService, Crumb } from './breadcrumb.service';
 
 export class BreadcrumbController implements angular.IController {
@@ -7,9 +8,9 @@ export class BreadcrumbController implements angular.IController {
 
   breadcrumbs: Crumb[];
 
-  static $inject: string[] = ['$scope', 'breadcrumbService'];
-  constructor(private $scope: angular.IScope, private breadcrumbService: BreadcrumbService) {
-    $scope.$watch(() => { return breadcrumbService.get(this.id); }, (breadcrumbs: Crumb[]) => {
+  static $inject: string[] = ['$scope', 'applicationHeaderService'];
+  constructor(private $scope: angular.IScope, private applicationHeaderService: ApplicationHeaderService) {
+    $scope.$watch(() => applicationHeaderService.breadcrumbService.get(this.id), (breadcrumbs: Crumb[]) => {
       this.resetCrumbs(breadcrumbs);
     }, true);
   }
@@ -20,7 +21,7 @@ export class BreadcrumbController implements angular.IController {
 
   private resetCrumbs(breadcrumbs: Crumb[]) {
     this.breadcrumbs = [];
-    for (let crumb of breadcrumbs) {
+    for (const crumb of breadcrumbs) {
       this.breadcrumbs.push(crumb);
     }
   }

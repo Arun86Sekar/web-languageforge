@@ -1,6 +1,7 @@
 import * as angular from 'angular';
 
 import { UserService } from '../../core/api/user.service';
+import { ApplicationHeaderService } from '../../core/application-header.service';
 import { NoticeService } from '../../core/notice/notice.service';
 import { SessionService } from '../../core/session.service';
 import { UserWithPassword } from '../../shared/model/user-password.model';
@@ -44,11 +45,13 @@ export class SiteAdminUsersController implements angular.IController {
   uniqueUserState: string = 'empty';
 
   static $inject = ['$scope', 'userService',
-    'sessionService', 'silNoticeService'];
+    'sessionService', 'silNoticeService', 'applicationHeaderService'];
   constructor(private $scope: angular.IScope, private userService: UserService,
-              private sessionService: SessionService, private notice: NoticeService) { }
+              private sessionService: SessionService, private notice: NoticeService,
+              private applicationHeaderService: ApplicationHeaderService) { }
 
   $onInit() {
+    this.applicationHeaderService.setPageName('Site Administration');
     this.sessionService.getSession().then(session => {
       this.userId = session.userId();
     });
