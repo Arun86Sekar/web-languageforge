@@ -1,4 +1,5 @@
 import { ApiService, JsonRpcCallback } from '../../../bellows/core/api/api.service';
+import { ApplicationHeaderService } from '../../../bellows/core/application-header.service';
 import { BreadcrumbService } from '../../../bellows/core/breadcrumbs/breadcrumb.service';
 import { SessionService } from '../../../bellows/core/session.service';
 import { LexiconLinkService } from './lexicon-link.service';
@@ -6,15 +7,17 @@ import { LexiconLinkService } from './lexicon-link.service';
 export class LexiconProjectService {
   static $inject: string[] = ['apiService', 'sessionService',
     'breadcrumbService',
-    'lexLinkService'
+    'lexLinkService',
+    'applicationHeaderService'
   ];
   constructor(private api: ApiService, private sessionService: SessionService,
               private breadcrumbService: BreadcrumbService,
-              private linkService: LexiconLinkService) { }
+              private linkService: LexiconLinkService,
+              private applicationHeaderService: ApplicationHeaderService) { }
 
-  setBreadcrumbs(view: string, label: string) {
+  setBreadcrumbs(view: string, label: string, prependLabel: boolean = false) {
     this.sessionService.getSession().then(session => {
-      this.breadcrumbService.set('top', [{
+      this.applicationHeaderService.breadcrumbService.set('top', [{
         href: '/app/projects',
         label: 'My Projects'
       }, {
@@ -24,6 +27,7 @@ export class LexiconProjectService {
         href: this.linkService.projectView(view),
         label
       }]);
+      this.applicationHeaderService.setPageName(session.project().projectName + (prependLabel ? ' - ' + label : ''));
     });
   }
 

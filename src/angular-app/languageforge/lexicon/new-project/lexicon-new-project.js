@@ -85,9 +85,11 @@ angular.module('lexicon-new-project',
   .controller('NewLexProjectCtrl', ['$scope', '$filter', '$uibModal', '$q', '$state', '$window',
     'sessionService', 'silNoticeService', 'projectService', 'linkService',
     'Upload', 'inputSystems', 'lexProjectService', 'lexSendReceiveApi',  'lexSendReceive',
+  'applicationHeaderService',
   function ($scope, $filter, $modal, $q, $state, $window,
             sessionService, notice, projectService, linkService,
-            Upload, inputSystemsService, lexProjectService, sendReceiveApi, sendReceive) {
+            Upload, inputSystemsService, lexProjectService, sendReceiveApi, sendReceive,
+            applicationHeaderService) {
     $scope.interfaceConfig = {};
     $scope.interfaceConfig.userLanguageCode = 'en';
     sessionService.getSession().then(function (session) {
@@ -97,6 +99,7 @@ angular.module('lexicon-new-project',
       }
     });
 
+    applicationHeaderService.setPageName('Start or join a Web Dictionary Project');
     $scope.interfaceConfig.direction = 'ltr';
     $scope.interfaceConfig.pullToSide = 'float-right';
     $scope.interfaceConfig.pullNormal = 'float-left';

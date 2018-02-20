@@ -63,10 +63,10 @@ angular.module('lexicon',
   }])
   .controller('LexiconCtrl', ['$scope', 'sessionService', 'lexConfigService', 'lexProjectService',
     '$translate', '$location', '$interval', 'silNoticeService', 'lexEditorDataService',
-    'lexSendReceiveApi', 'lexSendReceive', 'lexRightsService', '$q', 'inputSystems',
+    'lexSendReceiveApi', 'lexSendReceive', 'lexRightsService', '$q', 'inputSystems', '$state',
   function ($scope, sessionService, lexConfig, lexProjectService,
             $translate, $location, $interval, notice, editorService,
-            sendReceiveApi, sendReceive, rightsService, $q, inputSystemsService) {
+            sendReceiveApi, sendReceive, rightsService, $q, inputSystemsService, $state) {
     var pristineLanguageCode;
 
     $scope.finishedLoading = false;
@@ -97,7 +97,7 @@ angular.module('lexicon',
       changeInterfaceLanguage($scope.interfaceConfig.userLanguageCode);
 
       $scope.gotoDictionary = function gotoDictionary() {
-        $location.path('/editor/list');
+        $state.go('editor.list');
       };
 
       $scope.showDictionaryButton = function showDictionaryButton() {

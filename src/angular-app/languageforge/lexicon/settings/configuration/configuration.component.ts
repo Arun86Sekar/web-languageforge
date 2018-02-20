@@ -47,7 +47,7 @@ export class LexiconConfigurationController implements angular.IController {
   constructor(private $scope: LexiconConfigControllerScope, private notice: NoticeService,
               private sessionService: SessionService, private lexProjectService: LexiconProjectService,
               private lexConfig: LexiconConfigService, private sendReceive: LexiconSendReceiveService) {
-    lexProjectService.setBreadcrumbs('configuration', 'Configuration');
+    lexProjectService.setBreadcrumbs('configuration', 'Configuration', true);
 
     sessionService.getSession().then(session => {
       this.session = session;

@@ -8,7 +8,7 @@ angular.module('lexicon.view.settings', ['coreModule', 'palaso.ui.language', 'pa
     var currentTabIndex = 0;
     var warnOfUnsavedEditsId;
 
-    lexProjectService.setBreadcrumbs('viewSettings', $filter('translate')('View Settings'));
+    lexProjectService.setBreadcrumbs('viewSettings', $filter('translate')('View Settings'), true);
 
     // ViewModel for input systems selectors
     var InputSystemsViewModel = function (allTags, selectedTags) {

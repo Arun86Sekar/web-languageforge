@@ -1,6 +1,7 @@
 import * as angular from 'angular';
 
 import { ProjectService } from '../../core/api/project.service';
+import { ApplicationHeaderService } from '../../core/application-header.service';
 import { NoticeService } from '../../core/notice/notice.service';
 import { SessionService } from '../../core/session.service';
 import { Project } from '../../shared/model/project.model';
@@ -22,9 +23,10 @@ export class ProjectsAppController implements angular.IController {
   siteName: string;
   projectCount: number;
 
-  static $inject = ['$window', 'projectService', 'sessionService', 'silNoticeService'];
+  static $inject = ['$window', 'projectService', 'sessionService', 'silNoticeService', 'applicationHeaderService'];
   constructor(private $window: angular.IWindowService, private projectService: ProjectService,
-              private sessionService: SessionService, private notice: NoticeService) {
+              private sessionService: SessionService, private notice: NoticeService,
+              private applicationHeaderService: ApplicationHeaderService) {
   }
 
   $onInit() {
@@ -39,6 +41,7 @@ export class ProjectsAppController implements angular.IController {
       this.rights.showControlBar = this.rights.canCreateProject;
       this.siteName = session.baseSite();
     });
+    this.applicationHeaderService.setPageName('My Projects');
   }
 
   isSelected(project: Project) {

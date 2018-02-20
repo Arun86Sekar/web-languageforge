@@ -1,6 +1,7 @@
 import * as angular from 'angular';
 
 import { ProjectService } from '../../core/api/project.service';
+import { ApplicationHeaderService } from '../../core/application-header.service';
 import { SessionService } from '../../core/session.service';
 
 export class Rights {
@@ -23,9 +24,9 @@ export class UserManagementAppController implements angular.IController {
   };
   joinRequests = {};
 
-  static $inject = ['$location', 'projectService', 'sessionService'];
+  static $inject = ['$location', 'projectService', 'sessionService', 'applicationHeaderService'];
   constructor(private $location: angular.ILocationService, private projectService: ProjectService,
-              private sessionService: SessionService) { }
+              private sessionService: SessionService, private applicationHeaderService: ApplicationHeaderService) { }
 
   $onInit(): void {
     this.joinRequests = [];
@@ -61,6 +62,17 @@ export class UserManagementAppController implements angular.IController {
         this.list.userCount = result.data.userCount;
         this.project = result.data.project;
         this.roles = this.project.roles;
+        this.applicationHeaderService.setPageName(result.data.project.projectName + ' - User Management');
+        this.applicationHeaderService.breadcrumbService.set('top', [{
+          href: '/app/projects',
+          label: 'My Projects'
+        }, {
+          href: result.data.project.appLink,
+          label: result.data.project.projectName
+        }, {
+          href: '',
+          label: 'User Management'
+        }]);
       }
     });
   }

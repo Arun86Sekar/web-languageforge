@@ -6,7 +6,6 @@ angular.module('lexicon.settings', ['coreModule', 'palaso.ui.listview', 'palaso.
     'silNoticeService', 'lexProjectService',
   function ($scope, $filter, userService, ss,
             notice, lexProjectService) {
-    // lexProjectService.setBreadcrumbs('settings', $filter('translate')('Project Settings'));
 
     ss.getSession().then(function (session) {
       $scope.rights = $scope.rights || {};
@@ -21,6 +20,7 @@ angular.module('lexicon.settings', ['coreModule', 'palaso.ui.listview', 'palaso.
 
     $scope.project = $scope.project || {};
     $scope.actionInProgress = false;
+    lexProjectService.setBreadcrumbs('settings', 'Settings', true);
 
     function readProject() {
       lexProjectService.readProject(function (result) {
